@@ -2,41 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* Environmental Theme Design System - All colors, gradients, fonts, etc defined here. 
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Environmental Color Palette */
+    --background: 145 25% 97%;
+    --foreground: 150 30% 8%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 140 20% 98%;
+    --card-foreground: 150 25% 12%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 140 20% 98%;
+    --popover-foreground: 150 25% 12%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Nature Green Primary */
+    --primary: 142 71% 45%;
+    --primary-foreground: 140 20% 98%;
+    --primary-glow: 142 71% 65%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Earth Secondary */
+    --secondary: 35 25% 88%;
+    --secondary-foreground: 150 25% 12%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Forest Muted */
+    --muted: 140 15% 92%;
+    --muted-foreground: 150 15% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Ocean Accent */
+    --accent: 200 75% 85%;
+    --accent-foreground: 200 50% 15%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 140 20% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 140 20% 85%;
+    --input: 140 20% 90%;
+    --ring: 142 71% 45%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Environmental Gradients */
+    --gradient-nature: linear-gradient(135deg, hsl(142 71% 45%), hsl(120 60% 50%));
+    --gradient-earth: linear-gradient(135deg, hsl(35 45% 70%), hsl(25 35% 60%));
+    --gradient-ocean: linear-gradient(135deg, hsl(200 75% 65%), hsl(220 65% 55%));
+    --gradient-forest: linear-gradient(135deg, hsl(140 50% 30%), hsl(160 40% 20%));
+    --gradient-sky: linear-gradient(180deg, hsl(200 100% 90%), hsl(210 80% 85%));
+    
+    /* Shadows with Environmental Touch */
+    --shadow-nature: 0 4px 20px -2px hsl(142 71% 45% / 0.15);
+    --shadow-earth: 0 8px 30px -4px hsl(35 45% 40% / 0.2);
+    --shadow-glow: 0 0 40px hsl(142 71% 65% / 0.3);
+
+    /* Transitions */
+    --transition-nature: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,41 +78,60 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark Environmental Theme */
+    --background: 150 25% 5%;
+    --foreground: 140 20% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 150 20% 8%;
+    --card-foreground: 140 20% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 150 20% 8%;
+    --popover-foreground: 140 20% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Bright Nature Green for Dark Mode */
+    --primary: 142 71% 55%;
+    --primary-foreground: 150 20% 5%;
+    --primary-glow: 142 71% 75%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* Dark Earth Secondary */
+    --secondary: 150 15% 15%;
+    --secondary-foreground: 140 20% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    /* Dark Forest Muted */
+    --muted: 150 15% 12%;
+    --muted-foreground: 140 15% 70%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Dark Ocean Accent */
+    --accent: 200 50% 25%;
+    --accent-foreground: 200 75% 90%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 140 20% 95%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 150 15% 20%;
+    --input: 150 15% 18%;
+    --ring: 142 71% 55%;
+
+    /* Dark Mode Gradients */
+    --gradient-nature: linear-gradient(135deg, hsl(142 71% 35%), hsl(120 60% 40%));
+    --gradient-earth: linear-gradient(135deg, hsl(35 45% 25%), hsl(25 35% 20%));
+    --gradient-ocean: linear-gradient(135deg, hsl(200 75% 25%), hsl(220 65% 20%));
+    --gradient-forest: linear-gradient(135deg, hsl(140 50% 15%), hsl(160 40% 10%));
+    --gradient-sky: linear-gradient(180deg, hsl(200 50% 15%), hsl(210 40% 12%));
+
+    /* Dark Shadows */
+    --shadow-nature: 0 4px 20px -2px hsl(142 71% 25% / 0.4);
+    --shadow-earth: 0 8px 30px -4px hsl(35 45% 15% / 0.6);
+    --shadow-glow: 0 0 40px hsl(142 71% 45% / 0.5);
+
+    --sidebar-background: 150 20% 8%;
+    --sidebar-foreground: 140 20% 85%;
+    --sidebar-primary: 142 71% 55%;
+    --sidebar-primary-foreground: 150 20% 5%;
+    --sidebar-accent: 150 15% 12%;
+    --sidebar-accent-foreground: 140 20% 85%;
+    --sidebar-border: 150 15% 18%;
+    --sidebar-ring: 142 71% 55%;
   }
 }
 
@@ -101,5 +142,63 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Environmental Gradient Classes */
+  .bg-gradient-nature {
+    background: var(--gradient-nature);
+  }
+  
+  .bg-gradient-earth {
+    background: var(--gradient-earth);
+  }
+  
+  .bg-gradient-ocean {
+    background: var(--gradient-ocean);
+  }
+  
+  .bg-gradient-forest {
+    background: var(--gradient-forest);
+  }
+  
+  .bg-gradient-sky {
+    background: var(--gradient-sky);
+  }
+
+  /* Environmental Shadow Classes */
+  .shadow-nature {
+    box-shadow: var(--shadow-nature);
+  }
+  
+  .shadow-earth {
+    box-shadow: var(--shadow-earth);
+  }
+  
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Transition Classes */
+  .transition-nature {
+    transition: var(--transition-nature);
+  }
+  
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+
+  /* Interactive Elements */
+  .nature-link {
+    @apply relative inline-block after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
+  }
+  
+  .hover-lift {
+    @apply transition-nature hover:scale-105 hover:shadow-nature;
+  }
+  
+  .hover-glow {
+    @apply transition-nature hover:shadow-glow;
   }
 }
