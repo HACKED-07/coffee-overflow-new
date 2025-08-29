@@ -2,9 +2,11 @@ import { Moon, Sun, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
+  const { user, loading, isAuthenticated, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -50,21 +52,37 @@ export const Navbar = () => {
               )}
             </Button>
 
-            {location.pathname === '/' && (
+            {!loading && (
               <div className="flex items-center space-x-3">
-                <Button 
-                  variant="outline" 
-                  onClick={() => navigate('/login')}
-                  className="hover-lift"
-                >
-                  Login
-                </Button>
-                <Button 
-                  onClick={() => navigate('/register')}
-                  className="bg-gradient-nature hover-glow"
-                >
-                  Get Started
-                </Button>
+                {isAuthenticated ? (
+                  <>
+                    <div className="hidden sm:flex items-center gap-2 pr-2">
+                      {user?.image && <img src={user.image} alt="avatar" className="h-7 w-7 rounded-full border" />}
+                      <span className="text-sm text-muted-foreground max-w-[140px] truncate">{user?.name || user?.email}</span>
+                    </div>
+                    <Button onClick={signOut} variant="outline" className="hover-lift">Sign out</Button>
+                  </>
+                ) : (
+                  <>
+                    {location.pathname === '/' && (
+                      <>
+                        <Button 
+                          variant="outline" 
+                          onClick={() => navigate('/login')}
+                          className="hover-lift"
+                        >
+                          Login
+                        </Button>
+                        <Button 
+                          onClick={() => navigate('/register')}
+                          className="bg-gradient-nature hover-glow"
+                        >
+                          Get Started
+                        </Button>
+                      </>
+                    )}
+                  </>
+                )}
               </div>
             )}
           </div>

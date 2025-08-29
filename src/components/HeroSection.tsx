@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, PlayCircle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import heroImage from "@/assets/hero-nature.jpg";
 
 export const HeroSection = () => {
-  const navigate = useNavigate();
+  const { signIn } = useAuth();
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -42,7 +42,7 @@ export const HeroSection = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Button 
               size="lg"
-              onClick={() => navigate('/register')}
+              onClick={() => signIn()}
               className="bg-gradient-nature hover-glow text-lg px-8 py-6 shadow-nature"
             >
               Start Your Journey

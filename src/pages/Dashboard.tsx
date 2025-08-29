@@ -4,15 +4,29 @@ import { Button } from "@/components/ui/button";
 import { Bell, MessageCircle, Leaf, TrendingUp, Award, Users, Target, Settings, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { PageLoading } from "@/components/ui/loading";
 
 export const Dashboard = () => {
   const [notifications] = useState(3);
   const [showChat, setShowChat] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
+
+  // Get user initials for avatar fallback
+  const getUserInitials = (name: string | null | undefined) => {
+    if (!name) return 'U';
+    return name
+      .split(' ')
+      .map(word => word.charAt(0))
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   const stats = [
     { title: "Carbon Saved", value: "2.4 tons", icon: Leaf, color: "text-primary" },
@@ -27,6 +41,11 @@ export const Dashboard = () => {
     { action: "Recycled 10kg waste", points: "+30", time: "2 days ago" },
     { action: "Solar energy usage", points: "+40", time: "3 days ago" },
   ];
+
+  const handleSignOut = () => {
+    signOut();
+    navigate('/');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-sky">
@@ -77,11 +96,13 @@ export const Dashboard = () => {
               {/* Profile */}
               <div className="flex items-center space-x-3">
                 <Avatar className="hover-lift cursor-pointer">
-                  <AvatarImage src="/placeholder-avatar.jpg" />
-                  <AvatarFallback className="bg-gradient-nature text-white">JD</AvatarFallback>
+                  <AvatarImage src={user.image || undefined} />
+                  <AvatarFallback className="bg-gradient-nature text-white">
+                    {getUserInitials(user.name)}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="hidden md:block">
-                  <p className="text-sm font-medium">John Doe</p>
+                  <p className="text-sm font-medium">{user.name || user.email}</p>
                   <p className="text-xs text-muted-foreground">Eco Warrior</p>
                 </div>
               </div>
@@ -89,7 +110,7 @@ export const Dashboard = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => navigate('/')}
+                onClick={handleSignOut}
                 className="hover-glow"
               >
                 <LogOut className="h-5 w-5" />
@@ -103,7 +124,7 @@ export const Dashboard = () => {
       <main className="container mx-auto px-6 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">Welcome back, John! 🌱</h2>
+          <h2 className="text-3xl font-bold mb-2">Welcome back, {user.name?.split(' ')[0] || 'Eco Warrior'}! 🌱</h2>
           <p className="text-muted-foreground">
             You've saved 2.4 tons of CO2 this month. Keep up the great work!
           </p>

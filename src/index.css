@@ -75,6 +75,21 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Eco-chat specific colors */
+    --chat-user-bg: 142 76% 36%;
+    --chat-user-fg: 0 0% 100%;
+    --chat-bot-bg: 120 25% 95%;
+    --chat-bot-fg: 140 30% 20%;
+
+    /* Beautiful eco gradients */
+    --gradient-eco-primary: linear-gradient(135deg, hsl(142 76% 36%), hsl(158 64% 52%));
+    --gradient-eco-bg: linear-gradient(180deg, hsl(120 30% 98%), hsl(120 20% 95%));
+    --gradient-eco-chat: linear-gradient(45deg, hsl(142 40% 92%), hsl(200 30% 95%));
+
+    /* Shadows with green glow */
+    --shadow-eco: 0 4px 20px hsl(142 76% 36% / 0.15);
+    --shadow-eco-strong: 0 8px 30px hsl(142 76% 36% / 0.25);
   }
 
   .dark {
@@ -132,6 +147,21 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 140 20% 85%;
     --sidebar-border: 150 15% 18%;
     --sidebar-ring: 142 71% 55%;
+
+    /* Dark eco-chat specific colors */
+    --chat-user-bg: 142 60% 45%;
+    --chat-user-fg: 0 0% 100%;
+    --chat-bot-bg: 140 15% 18%;
+    --chat-bot-fg: 120 15% 88%;
+
+    /* Beautiful dark eco gradients */
+    --gradient-eco-primary: linear-gradient(135deg, hsl(142 60% 45%), hsl(158 50% 40%));
+    --gradient-eco-bg: linear-gradient(180deg, hsl(140 15% 8%), hsl(140 20% 12%));
+    --gradient-eco-chat: linear-gradient(45deg, hsl(140 15% 10%), hsl(200 15% 12%));
+
+    /* Dark shadows with green glow */
+    --shadow-eco: 0 4px 20px hsl(142 60% 45% / 0.2);
+    --shadow-eco-strong: 0 8px 30px hsl(142 60% 45% / 0.3);
   }
 }
 
@@ -200,5 +230,66 @@ All colors MUST be HSL.
   
   .hover-glow {
     @apply transition-nature hover:shadow-glow;
+  }
+
+  .gradient-eco-primary {
+    background: var(--gradient-eco-primary);
+  }
+  
+  .gradient-eco-bg {
+    background: var(--gradient-eco-bg);
+  }
+  
+  .gradient-eco-chat {
+    background: var(--gradient-eco-chat);
+  }
+  
+  .shadow-eco {
+    box-shadow: var(--shadow-eco);
+  }
+  
+  .shadow-eco-strong {
+    box-shadow: var(--shadow-eco-strong);
+  }
+
+  .animate-pulse-gentle {
+    animation: pulse-gentle 2s ease-in-out infinite;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+}
+
+@keyframes pulse-gentle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

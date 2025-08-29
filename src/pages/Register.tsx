@@ -1,241 +1,108 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Eye, EyeOff, Github, Chrome, Camera, ArrowLeft, User } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { Navbar } from "@/components/Navbar";
-import { useToast } from "@/hooks/use-toast";
+import { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageLoading } from '@/components/ui/loading';
 
-export const Register = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
-  });
-  const [isLoading, setIsLoading] = useState(false);
+export default function Register() {
+  const { signIn, loading, isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const location = useLocation();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Passwords do not match.",
-        variant: "destructive"
-      });
-      return;
+  // Get the intended destination from location state
+  const from = location.state?.from?.pathname || '/dashboard';
+
+  useEffect(() => {
+    // If user is already authenticated, redirect to intended destination
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
     }
-    
-    setIsLoading(true);
-    
-    // Simulate registration
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: "Welcome to EcoVision!",
-        description: "Your account has been created successfully.",
-      });
-      navigate('/dashboard');
-    }, 2000);
+  }, [isAuthenticated, navigate, from]);
+
+  const handleSignUp = () => {
+    // Auth.js handles signup through the same login flow
+    signIn();
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
+  const handleGoogleSignUp = () => {
+    signIn('google');
   };
 
-  const handleSocialRegister = (provider: string) => {
-    toast({
-      title: `${provider} Registration`,
-      description: `Redirecting to ${provider} authentication...`,
-    });
-    setTimeout(() => navigate('/dashboard'), 1500);
+  const handleGitHubSignUp = () => {
+    signIn('github');
   };
 
-  const handleFaceRecognition = () => {
-    toast({
-      title: "Face Recognition Setup",
-      description: "Initializing camera for face recognition setup...",
-    });
-  };
+  if (loading) {
+    return <PageLoading message="Loading..." />;
+  }
+
+  if (isAuthenticated) {
+    return <PageLoading message="Redirecting..." />;
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-sky">
-      <Navbar />
-      
-      <div className="pt-24 pb-12 flex items-center justify-center px-6">
-        <Card className="w-full max-w-md shadow-earth hover-lift">
-          <CardHeader className="space-y-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate('/')}
-              className="self-start"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Home
-            </Button>
-            
-            <CardTitle className="text-2xl text-center">
-              Join EcoVision
-              <div className="text-sm text-muted-foreground font-normal mt-2">
-                Create your account and start making a difference
-              </div>
-            </CardTitle>
-          </CardHeader>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
+          <CardDescription>
+            Sign up to get started with your account
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Button 
+            onClick={handleSignUp}
+            className="w-full"
+            size="lg"
+          >
+            Sign Up with Auth.js
+          </Button>
           
-          <CardContent className="space-y-6">
-            {/* Social Registration Options */}
-            <div className="space-y-3">
-              <Button
-                variant="outline"
-                className="w-full hover-lift"
-                onClick={() => handleSocialRegister('Google')}
-              >
-                <Chrome className="h-4 w-4 mr-2" />
-                Sign up with Google
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="w-full hover-lift"
-                onClick={() => handleSocialRegister('GitHub')}
-              >
-                <Github className="h-4 w-4 mr-2" />
-                Sign up with GitHub
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="w-full hover-lift border-primary/30"
-                onClick={handleFaceRecognition}
-              >
-                <Camera className="h-4 w-4 mr-2" />
-                Set up Face Recognition
-              </Button>
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
             </div>
-
-            <div className="relative">
-              <Separator />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="bg-card px-4 text-sm text-muted-foreground">
-                  or create account with email
-                </span>
-              </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
             </div>
+          </div>
 
-            {/* Registration Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="relative">
-                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="text"
-                  name="name"
-                  placeholder="Full name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  className="pl-10 transition-nature"
-                />
-              </div>
-              
-              <div>
-                <Input
-                  type="email"
-                  name="email"
-                  placeholder="Enter your email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  className="transition-nature"
-                />
-              </div>
-              
-              <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  placeholder="Create password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  required
-                  className="pr-10 transition-nature"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-0 top-0 h-full px-3"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Button 
+              variant="outline" 
+              onClick={handleGoogleSignUp}
+              className="w-full"
+            >
+              Google
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={handleGitHubSignUp}
+              className="w-full"
+            >
+              GitHub
+            </Button>
+          </div>
 
-              <div>
-                <Input
-                  type="password"
-                  name="confirmPassword"
-                  placeholder="Confirm password"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  required
-                  className="transition-nature"
-                />
-              </div>
+          <p className="text-xs text-center text-muted-foreground mt-4">
+            Already have an account?{' '}
+            <Button 
+              variant="link" 
+              className="p-0 h-auto text-xs"
+              onClick={() => navigate('/login')}
+            >
+              Sign in here
+            </Button>
+          </p>
 
-              <div className="text-sm">
-                <label className="flex items-start space-x-2 cursor-pointer">
-                  <input type="checkbox" className="mt-0.5 rounded border-border" required />
-                  <span>
-                    I agree to the{" "}
-                    <Button variant="link" className="p-0 h-auto nature-link text-sm">
-                      Terms of Service
-                    </Button>
-                    {" "}and{" "}
-                    <Button variant="link" className="p-0 h-auto nature-link text-sm">
-                      Privacy Policy
-                    </Button>
-                  </span>
-                </label>
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full bg-gradient-nature hover-glow"
-                disabled={isLoading}
-              >
-                {isLoading ? "Creating account..." : "Create Account"}
-              </Button>
-            </form>
-
-            <div className="text-center text-sm">
-              Already have an account?{" "}
-              <Button
-                variant="link"
-                className="p-0 h-auto nature-link"
-                onClick={() => navigate('/login')}
-              >
-                Sign in here
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          <p className="text-xs text-center text-muted-foreground">
+            By signing up, you agree to our Terms of Service and Privacy Policy.
+          </p>
+        </CardContent>
+      </Card>
     </div>
   );
-};
-
-export default Register;
+}
