@@ -1,275 +1,185 @@
-# Terra Spark Net - Integrated Eco-Chat Project
+# 🌍 Green Hydrogen Credit System
 
-A comprehensive React application that combines environmental awareness with AI-powered chat functionality. This project integrates the eco-wise-chatter chat app as a sub-project within the main Terra Spark Net application.
+A comprehensive **Solana blockchain-based system** for issuing, tracking, and certifying green hydrogen credits with transparent and immutable transaction records.
 
-## 🌟 Features
+## 🎯 Problem Statement Solved
 
-### Main Application
-- **Modern React + TypeScript** architecture
-- **Responsive design** with Tailwind CSS
-- **Theme switching** (light/dark mode)
-- **Authentication system** using Auth.js default pages
-- **Dashboard** for user management
-- **Nature-inspired UI** with smooth animations
+This system addresses the critical need for **accurate accounting and incentivization of truly "green" hydrogen** production in the transition to low-carbon economies. It provides:
 
-### Authentication System
-- **Auth0 integration** for secure authentication
-- **Multiple sign-in options** - Google OAuth, GitHub OAuth, Email/Password
-- **Universal login** with Auth0's hosted login page
-- **Secure token management** with Auth0 SDK
-- **User profile management** with Auth0 user profiles
-- **Social connections** for seamless OAuth experience
+- **Transparent & Immutable Credit Tracking**: Every credit transaction is recorded and persisted
+- **Fraud Prevention**: Built-in safeguards against double-counting and fraudulent claims
+- **Regulatory Compliance**: Support for external auditors and government verifiers
+- **Market Confidence**: Increased trust in renewable hydrogen usage claims
 
-### Eco-Chat Integration
-- **Floating chat widget** - Always accessible from any page
-- **AI-powered environmental chatbot** using Google's Gemini model
-- **Real-time chat interface** with beautiful eco-themed design
-- **Environment-focused responses** with sustainability tips
-- **Responsive chat components** with smooth animations
-- **Backend API** built with Flask and Python
+## 🏗️ System Architecture
+
+### **Core Components**
+- **Solana Blockchain**: Smart contracts for immutable credit management
+- **React Frontend**: Modern, responsive UI with role-based access
+- **Blockchain Data Layer**: On-chain storage ensuring true immutability
+- **Role-Based System**: Three distinct user interfaces for different stakeholders
+
+### **User Roles & Interfaces**
+
+#### 🏭 **Green Hydrogen Producer**
+- Create and register production facilities
+- Generate hydrogen credits from renewable sources
+- Track production metrics and credit status
+- Monitor validation progress
+
+#### 🛡️ **Credit Validator (Regulatory Authority)**
+- Review and validate credit authenticity
+- Ensure compliance with green standards
+- Prevent double-counting and fraud
+- Maintain system integrity
+
+#### 🛒 **Credit Buyer (Industry Consumer)**
+- Purchase verified green hydrogen credits
+- Track sustainability metrics
+- Meet carbon-neutral goals
+- Support renewable energy investment
 
 ## 🚀 Getting Started
 
-### Prerequisites
-- Node.js (v18 or higher)
-- Python 3.7+
-- Docker (for PostgreSQL)
-- Google API key for Gemini AI
+### **Prerequisites**
+- Node.js 18+ 
+- npm or yarn
+- Solana CLI tools
+- Anchor CLI
 
-### Quick Setup (Recommended)
+### **Installation**
+```bash
+# Clone the repository
+git clone <repository-url>
+cd green-hydrogen-credit-system
 
-1. **Start PostgreSQL database:**
-   ```bash
-   docker run --name terra-spark-postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=terraspark -e POSTGRES_USER=postgres -p 5432:5432 -d postgres:latest
-   ```
+# Install dependencies
+npm install
 
-2. **Set up environment variables:**
-   ```bash
-   cp env.example .env
-   # Edit .env and add your Auth0 credentials and Google API key
-   ```
+# Build Solana program
+npm run build:program
 
-3. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+# Deploy to Solana devnet
+npm run deploy:program
 
-4. **Set up Auth0:**
-   - Create an Auth0 account at [auth0.com](https://auth0.com)
-   - Create a new application (Single Page Application)
-   - Configure your Auth0 domain, client ID, and audience
-   - Update the `.env` file with your Auth0 credentials
+# Start frontend
+npm run dev
+```
 
-5. **Start the chat backend:**
-   ```bash
-   cd backend && ./start.sh
-   ```
+## 📊 Solana Program Instructions
 
-6. **Start the frontend:**
-   ```bash
-   npm run dev
-   ```
+### **Core Operations**
+- `initialize_credit_mint` - Initialize the credit mint
+- `issue_credits` - Create new green hydrogen credits
+- `validate_credits` - Validate credits for compliance
+- `transfer_credits` - Transfer credits between owners
+- `retire_credits` - Retire credits for compliance
+- `certify_facility` - Certify production facilities
 
-### Manual Setup
+### **Blockchain Data Storage**
+All data is stored on the Solana blockchain:
+- **Credits**: Immutable credit records with full transaction history
+- **Facilities**: Certified production facility information
+- **Transactions**: Complete audit trail on-chain
 
-#### Frontend Setup
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+## 🔒 Security & Compliance Features
 
-2. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
+### **Fraud Prevention**
+- **Unique Credit IDs**: Each credit has a unique identifier
+- **Validation Workflow**: Credits must be validated before purchase
+- **Double-Counting Prevention**: Credits are marked as retired after purchase
+- **Audit Trail**: Complete transaction history with timestamps
 
-3. **Open your browser** and navigate to `http://localhost:5173`
+### **Data Integrity**
+- **Immutable Records**: Once validated, credit details cannot be altered
+- **Blockchain Storage**: All data is permanently stored on Solana
+- **Transaction Logging**: Complete audit trail on-chain for compliance
 
-#### Backend Setup
-1. **Navigate to the backend directory:**
-   ```bash
-   cd backend
-   ```
+## 🌱 Environmental Impact
 
-2. **Create a Python virtual environment:**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
+### **Carbon Reduction Tracking**
+- **CO2 Avoidance**: Credits represent avoided carbon emissions
+- **Renewable Verification**: Only credits from verified renewable sources
+- **Sustainability Metrics**: Track environmental impact over time
 
-3. **Install Python dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Create a `.env` file** with your Google API key:
-   ```
-   GOOGLE_API_KEY=your_google_api_key_here
-   ```
-
-5. **Start the backend server:**
-   ```bash
-   python app.py
-   ```
-
-The backend will run on `http://localhost:8000`
-
-## 📱 Available Routes
-
-- `/` - Home page with features and navigation
-- `/dashboard` - User dashboard (protected route)
-- **Auth.js default pages** - `/auth/signin`, `/auth/signout` (handled by Auth.js)
-- **Floating Chat** - Always accessible chat icon in bottom-right corner
-
-## 🔐 Authentication Flow
-
-The application now uses Auth.js's default pages for authentication:
-
-1. **Sign In**: Users are redirected to `/auth/signin` which shows Auth.js's default signin page
-2. **OAuth Providers**: Google and GitHub OAuth are handled seamlessly
-3. **Credentials**: Email/password authentication is available on the default signin page
-4. **Sign Out**: Users are redirected to `/auth/signout` for secure logout
-5. **Protected Routes**: Dashboard and other protected content use the `ProtectedRoute` component
-
-## 🎨 Eco-Chat Features
-
-### Chat Interface
-- **Real-time messaging** with typing indicators
-- **Eco-themed design** with nature-inspired colors
-- **Responsive layout** for all device sizes
-- **Smooth animations** and transitions
-
-### AI Capabilities
-- **Environment-focused responses** using Google Gemini
-- **Sustainability tips** and eco-friendly advice
-- **Contextual conversations** about environmental topics
-- **Emoji-enhanced responses** for better user experience
-
-### Design System
-- **Nature-inspired color palette** with green gradients
-- **Custom CSS animations** for smooth interactions
-- **Dark/light theme support** with eco-friendly aesthetics
-- **Responsive components** built with shadcn/ui
+### **Market Incentives**
+- **Clear Value**: Transparent pricing and credit valuation
+- **Investment Confidence**: Verified credits boost market trust
+- **Renewable Adoption**: Encourages investment in green hydrogen
 
 ## 🛠️ Technology Stack
 
-### Frontend
-- **React 18** with TypeScript
-- **Vite** for fast development and building
-- **Tailwind CSS** for styling
-- **shadcn/ui** for component library
-- **React Router** for navigation
-- **React Query** for data fetching
-- **Auth.js** for authentication
+### **Blockchain**
+- **Solana**: High-performance blockchain platform
+- **Anchor Framework**: Rust-based smart contract development
+- **SPL Tokens**: Standard token implementation for credits
 
-### Backend
-- **Flask** web framework for chat API
-- **Express.js** auth server with Auth.js
-- **Google Generative AI** (Gemini) for chat responses
-- **PostgreSQL** database with Prisma ORM
-- **bcrypt** password hashing for security
-- **Multer** file upload handling for face images
-- **CORS** enabled for frontend communication
-- **Environment variable** management
-- **Python virtual environment** for dependency isolation
+### **Frontend**
+- **React 18**: Modern React with hooks and functional components
+- **TypeScript**: Type-safe development
+- **Tailwind CSS**: Utility-first CSS framework
+- **Shadcn/ui**: High-quality UI components
 
-### Development Tools
-- **ESLint** for code quality
-- **TypeScript** for type safety
-- **PostCSS** and **Autoprefixer** for CSS processing
+### **Data Management**
+- **Blockchain Storage**: On-chain data with true immutability
+- **Real-time Updates**: Automatic blockchain data refresh
+- **Error Handling**: Comprehensive error handling and user feedback
 
-## 🔧 Development
+## 📈 Business Value
 
-### Available Scripts
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run lint` - Run ESLint
-- `npm run preview` - Preview production build
+### **For Producers**
+- **Market Access**: Sell verified green hydrogen credits
+- **Revenue Generation**: Monetize renewable energy production
+- **Compliance**: Meet regulatory requirements easily
 
-### Backend Scripts
-- `./setup.sh` - Automated setup for the entire project
-- `./backend/start.sh` - Quick backend startup with virtual environment
+### **For Buyers**
+- **Sustainability Goals**: Meet carbon-neutral targets
+- **Regulatory Compliance**: Prove green hydrogen usage
+- **Market Confidence**: Trust in verified credit authenticity
 
-### Project Structure
-```
-src/
-├── components/          # Reusable UI components
-│   ├── ui/             # shadcn/ui components
-│   ├── ChatInterface.tsx    # Main chat component
-│   ├── Message.tsx          # Message display component
-│   ├── ThemeToggle.tsx      # Theme switching component
-│   ├── FloatingChat.tsx     # Floating chat widget
-│   ├── ProtectedRoute.tsx   # Authentication guard component
-│   └── Navbar.tsx           # Navigation component
-├── pages/              # Page components
-│   ├── Dashboard.tsx        # User dashboard
-│   ├── Index.tsx            # Home page
-│   └── NotFound.tsx         # 404 page
-├── contexts/           # React contexts
-│   ├── AuthContext.tsx      # Authentication context
-│   └── ThemeContext.tsx     # Theme context
-├── hooks/              # Custom React hooks
-└── lib/                # Utility functions
+### **For Validators**
+- **System Integrity**: Maintain credit system credibility
+- **Regulatory Oversight**: Ensure compliance with standards
+- **Fraud Prevention**: Protect against system abuse
 
-auth-server/
-├── server.ts           # Express.js server with Auth.js
-├── prisma/             # Database schema and migrations
-└── package.json        # Auth server dependencies
+## 🔮 Future Enhancements
 
-backend/
-├── venv/               # Python virtual environment (created by setup)
-├── app.py              # Flask application
-├── requirements.txt    # Python dependencies
-├── start.sh            # Backend startup script
-└── README.md           # Backend documentation
-```
+### **Advanced Blockchain Features**
+- **Real-time Oracles**: External data integration for verification
+- **Decentralized Storage**: IPFS for document storage
+- **Cross-chain Integration**: Multi-blockchain support
 
-## 🌱 Environmental Focus
+### **Advanced Features**
+- **Digital Identity**: KYC/AML integration for users
+- **API Integration**: External verification systems
+- **Analytics Dashboard**: Advanced reporting and insights
+- **Mobile App**: Cross-platform mobile application
 
-This project emphasizes environmental awareness and sustainability:
-- **Eco-themed design** with nature-inspired colors
-- **AI responses** focused on environmental topics
-- **Sustainability tips** and green living advice
-- **Nature-inspired animations** and visual elements
+## 📋 Compliance & Standards
+
+### **Regulatory Support**
+- **Government Verifiers**: Integration with regulatory bodies
+- **External Auditors**: Support for third-party verification
+- **Industry Standards**: Compliance with hydrogen industry protocols
+
+### **Data Protection**
+- **Audit Trails**: Complete transaction history
+- **Data Encryption**: Secure data storage and transmission
+- **Access Control**: Role-based permissions and security
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+This system is designed to be extensible and welcomes contributions for:
+- Additional validation rules
+- Enhanced fraud detection
+- New user roles and permissions
+- Performance optimizations
+- Security enhancements
 
 ## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
-
-## 🆘 Support
-
-If you encounter any issues:
-1. **Virtual Environment Issues:** Make sure you're using the virtual environment (`source venv/bin/activate`)
-2. **Backend Connection:** Check the backend is running on port 8000
-3. **API Key:** Verify your Google API key is set correctly in `backend/.env`
-4. **Dependencies:** Run `./setup.sh` to ensure all dependencies are properly installed
-5. **Browser Console:** Check for any JavaScript errors
-6. **Authentication:** Ensure the auth server is running on port 3003
-
-## 🚀 Quick Troubleshooting
-
-### Common Issues:
-- **"externally-managed-environment" error:** Use the setup script which creates a virtual environment
-- **Backend won't start:** Make sure you're using the virtual environment (`source venv/bin/activate`)
-- **Port conflicts:** If port 8000 is busy, set a different port: `PORT=8001 python app.py`
-- **Frontend can't connect to backend:** Verify backend is running and check CORS settings
-- **Missing dependencies:** Run `./setup.sh` to reinstall everything
-- **Authentication issues:** Check that the auth server is running and accessible
-
-### Port Management:
-- **Default backend port:** 8000 (changed from 5000 to avoid macOS AirPlay conflicts)
-- **Default auth server port:** 3003
-- **Custom port:** Set `PORT=8001` environment variable before starting backend
-- **Check port usage:** Use `lsof -i :8000` to see what's using the port
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
 
-**🌍 Together, let's make our planet greener! 🌱**
+**🌍 Building a sustainable future, one green hydrogen credit at a time.**
