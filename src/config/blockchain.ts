@@ -1,0 +1,5 @@
+export const BLOCKCHAIN_CONFIG = {
+  CONTRACT_ADDRESS: import.meta.env.VITE_CONTRACT_ADDRESS || '0x0000000000000000000000000000000000000000',
+  SEPOLIA_RPC_URL: import.meta.env.VITE_SEPOLIA_RPC_URL || 'https://sepolia.infura.io/v3/YOUR_PROJECT_ID',
+  NETWORK: 'sepolia'
+};

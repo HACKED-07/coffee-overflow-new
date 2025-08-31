@@ -27,3 +27,5 @@ dist-ssr
 
 # Data files
 /data
+
+/generated/prisma
