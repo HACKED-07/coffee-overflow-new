@@ -42,6 +42,7 @@ export default function ValidatorDashboard({
   const [loading, setLoading] = useState<string | null>(null);
   const [selectedCredit, setSelectedCredit] = useState<Credit | null>(null);
   const [validationNotes, setValidationNotes] = useState('');
+  const [currentStep, setCurrentStep] = useState<number>(0);
 
   const { toast } = useToast();
   const { isConnected, issueCredits, validateCredits, createFacility, connect } = useEthereum();
@@ -53,10 +54,12 @@ export default function ValidatorDashboard({
 
   const validateCreditApplication = async (creditId: string) => {
     setLoading(creditId);
+    
+    // Show initial transaction
     onTransaction({
       type: 'validate_application',
       status: 'pending',
-      description: `Validating credit application ${creditId}`
+      description: `Starting blockchain validation process for credit ${creditId}`
     });
 
     try {
@@ -69,6 +72,14 @@ export default function ValidatorDashboard({
       if (!isConnected) {
         throw new Error('Wallet not connected - please connect to mint credits');
       }
+
+      // Update transaction status
+      setCurrentStep(1);
+      onTransaction({
+        type: 'validate_application',
+        status: 'pending',
+        description: `Step 1/3: Creating facility on blockchain (MetaMask prompt #1)`
+      });
 
       let facilityId = updatedCredit.facilityId;
       try {
@@ -83,6 +94,14 @@ export default function ValidatorDashboard({
         
         facilityId = await createFacility(facilityData);
         console.log('✅ Facility created on blockchain:', facilityId);
+        
+        // Update transaction status
+        setCurrentStep(2);
+        onTransaction({
+          type: 'validate_application',
+          status: 'pending',
+          description: `Step 2/3: Pre-minting credits on blockchain (MetaMask prompt #2)`
+        });
       } catch (facilityError) {
         console.log('🏭 Facility creation failed:', facilityError);
         console.log('🏭 Trying to use existing facility ID:', updatedCredit.facilityId);
@@ -101,6 +120,14 @@ export default function ValidatorDashboard({
         price: updatedCredit.price
       });
       console.log('✅ Credits pre-minted on blockchain with ID:', blockchainId);
+
+      // Update transaction status
+      setCurrentStep(3);
+      onTransaction({
+        type: 'validate_application',
+        status: 'pending',
+        description: `Step 3/3: Validating credits on blockchain (MetaMask prompt #3)`
+      });
 
       // Step 4: Validate the minted credits on blockchain
       console.log('✅ Validating pre-minted credits on blockchain...');
@@ -127,6 +154,7 @@ export default function ValidatorDashboard({
       });
 
       onRefresh();
+      setCurrentStep(0);
     } catch (error) {
       onTransaction({
         type: 'validate_application',
@@ -142,6 +170,7 @@ export default function ValidatorDashboard({
       });
     } finally {
       setLoading(null);
+      setCurrentStep(0);
     }
   };
 
@@ -188,6 +217,31 @@ export default function ValidatorDashboard({
                 <Wallet className="h-5 w-5 mr-2" />
                 Connect Wallet
               </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Multi-Step Process Notice */}
+      {isConnected && (
+        <Card className="bg-gradient-to-r from-blue-50 to-indigo-100 border-blue-200">
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-3">
+              <Activity className="h-8 w-8 text-blue-600" />
+              <div>
+                <h3 className="text-lg font-semibold text-blue-900">
+                  Multi-Step Blockchain Process
+                </h3>
+                <p className="text-blue-700">
+                  Credit validation requires 3 blockchain transactions: Facility creation → Credit minting → Credit validation. 
+                  You'll see 3 MetaMask prompts in sequence.
+                </p>
+                <div className="mt-2 text-sm text-blue-600">
+                  <p>🔹 Step 1: Create facility on blockchain</p>
+                  <p>🔹 Step 2: Pre-mint credits on blockchain</p>
+                  <p>🔹 Step 3: Validate credits on blockchain</p>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -311,7 +365,7 @@ export default function ValidatorDashboard({
                       {loading === credit.id ? (
                         <>
                           <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-1"></div>
-                          Processing...
+                          <span className="text-xs">Step {currentStep}/3</span>
                         </>
                       ) : (
                         <>

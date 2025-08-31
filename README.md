@@ -1,6 +1,6 @@
 
-<<<<<<< HEAD
-=======
+# Grevi - Green Hydrogen Credit Management System
+
 A comprehensive **Ethereum blockchain-based system** for issuing, tracking, and certifying green hydrogen credits with transparent and immutable transaction records.
 
 ## 🎯 Problem Statement Solved
@@ -58,7 +58,7 @@ This system addresses the critical need for **accurate accounting and incentiviz
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd green-hydrogen-credit-system
+cd grevi
 
 # Install dependencies
 npm install

@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useEthereum } from "@/contexts/EthereumContext";
+import Logo from "@/components/ui/logo";
 import { 
   Factory, 
   Shield, 
@@ -138,12 +139,19 @@ export default function Login({ onLogin }: LoginProps) {
           description: `Welcome, ${role.name}!`,
         });
 
-        // Pass role and credentials to parent component
-        onLogin(selectedRole, {
-          ...role.credentials,
-          role: selectedRole,
-          roleName: role.name
-        });
+              // Pass role and credentials to parent component
+      console.log('🔐 User logging in:', {
+        username: username,
+        role: selectedRole,
+        roleName: role.name,
+        timestamp: new Date().toISOString()
+      });
+      
+      onLogin(selectedRole, {
+        ...role.credentials,
+        role: selectedRole,
+        roleName: role.name
+      });
       } else {
         throw new Error('Invalid credentials');
       }
@@ -165,6 +173,13 @@ export default function Login({ onLogin }: LoginProps) {
     
     // Auto-login after a short delay
     setTimeout(() => {
+      console.log('⚡ Quick login:', {
+        username: role.credentials.username,
+        role: role.id,
+        roleName: role.name,
+        timestamp: new Date().toISOString()
+      });
+      
       onLogin(role.id, {
         ...role.credentials,
         role: role.id,
@@ -178,11 +193,11 @@ export default function Login({ onLogin }: LoginProps) {
       <div className="w-full max-w-6xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            Terra Spark Net
-          </h1>
-          <p className="text-xl text-gray-600">
-            Green Hydrogen Credit Management System
+          <div className="flex justify-center mb-4">
+            <Logo size="lg" className="justify-center" />
+          </div>
+          <p className="text-xl text-gray-600 mt-2">
+            Sustainable Green Hydrogen Credit Management System
           </p>
         </div>
 
@@ -315,7 +330,8 @@ export default function Login({ onLogin }: LoginProps) {
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-gray-500">
-          <p>This is a demonstration system. All data is for testing purposes only.</p>
+          <p>Grevi - Sustainable Green Hydrogen Credit Management System</p>
+          <p className="mt-1">This is a demonstration system. All data is for testing purposes only.</p>
         </div>
 
         {/* Wallet Connection Info */}

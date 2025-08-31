@@ -156,6 +156,30 @@ app.put('/api/credits/:id/validate', async (req, res) => {
   }
 });
 
+// Update credit ownership after purchase
+app.put('/api/credits/:id/ownership', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { newOwnerId, transactionHash } = req.body;
+    
+    console.log(`🔄 Transferring credit ${id} ownership to ${newOwnerId}`);
+    
+    const updatedCredit = await prisma.credit.update({
+      where: { id: id },
+      data: { 
+        ownerId: newOwnerId,
+        status: 'retired' // Mark as retired since it's been purchased
+      }
+    });
+    
+    console.log(`✅ Credit ${id} ownership transferred to ${newOwnerId}`);
+    res.json(updatedCredit);
+  } catch (error) {
+    console.error('❌ Error transferring credit ownership:', error);
+    res.status(500).json({ error: 'Failed to transfer credit ownership' });
+  }
+});
+
 // Update credit blockchain ID
 app.put('/api/credits/:id/blockchain', async (req, res) => {
   try {
@@ -223,6 +247,88 @@ app.get('/api/facilities/producer/:producerId', async (req, res) => {
     res.json(facilities);
   } catch (error) {
     console.error('Error fetching facilities by producer:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Create transaction
+app.post('/api/transactions', async (req, res) => {
+  try {
+    const transactionData = req.body;
+    
+    console.log('Creating transaction with data:', transactionData);
+    
+    const transaction = await prisma.transaction.create({
+      data: {
+        creditId: transactionData.creditId,
+        fromUserId: transactionData.fromUserId,
+        toUserId: transactionData.toUserId,
+        amount: parseFloat(transactionData.amount),
+        pricePerUnit: parseFloat(transactionData.pricePerUnit),
+        totalPrice: parseFloat(transactionData.totalPrice),
+        transactionType: transactionData.transactionType,
+        transactionHash: transactionData.transactionHash,
+        status: transactionData.status
+      }
+    });
+    
+    console.log('Transaction created successfully:', transaction);
+    res.json(transaction);
+  } catch (error) {
+    console.error('Error creating transaction:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get all transactions
+app.get('/api/transactions', async (req, res) => {
+  try {
+    const transactions = await prisma.transaction.findMany({
+      include: {
+        credit: {
+          include: {
+            facility: true,
+            producer: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+    res.json(transactions);
+  } catch (error) {
+    console.error('Error fetching transactions:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get transactions by user
+app.get('/api/transactions/user/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const transactions = await prisma.transaction.findMany({
+      where: {
+        OR: [
+          { fromUserId: userId },
+          { toUserId: userId }
+        ]
+      },
+      include: {
+        credit: {
+          include: {
+            facility: true,
+            producer: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+    res.json(transactions);
+  } catch (error) {
+    console.error('Error fetching user transactions:', error);
     res.status(500).json({ error: error.message });
   }
 });

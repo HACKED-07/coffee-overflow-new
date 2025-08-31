@@ -53,7 +53,7 @@ export class ApiService {
   }
 
   // Validate credit
-  static async validateCredit(creditId: number, validatorId: string) {
+  static async validateCredit(creditId: string, validatorId: string) {
     const response = await fetch(`${API_BASE_URL}/credits/${creditId}/validate`, {
       method: 'PUT',
       headers: {
@@ -80,6 +80,64 @@ export class ApiService {
     if (!response.ok) {
       throw new Error('Failed to update credit blockchain ID');
     }
+  }
+
+  // Update credit ownership after purchase
+  static async updateCreditOwnership(creditId: string, newOwnerId: string, transactionHash: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/credits/${creditId}/ownership`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ newOwnerId, transactionHash }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update credit ownership');
+    }
+  }
+
+  // Record a credit purchase transaction
+  static async recordPurchase(creditId: string, buyerId: string, amount: number, price: number, transactionHash: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/transactions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        creditId,
+        fromUserId: 'producer1', // Credits are initially owned by producer
+        toUserId: buyerId,
+        amount,
+        pricePerUnit: price,
+        totalPrice: amount * price,
+        transactionType: 'purchase',
+        transactionHash,
+        status: 'confirmed'
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to record purchase transaction');
+    }
+  }
+
+  // Get all transactions for audit purposes
+  static async getAllTransactions(): Promise<any[]> {
+    const response = await fetch(`${API_BASE_URL}/transactions`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch transactions: ${response.statusText}`);
+    }
+    return response.json();
+  }
+
+  // Get transactions by user
+  static async getTransactionsByUser(userId: string): Promise<any[]> {
+    const response = await fetch(`${API_BASE_URL}/transactions/user/${userId}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch user transactions: ${response.statusText}`);
+    }
+    return response.json();
   }
 
 

@@ -266,40 +266,151 @@ export default function AuditorDashboard({
         <CardHeader>
           <CardTitle className="flex items-center">
             <Activity className="h-5 w-5 mr-2" />
-            Recent Activity
+            End-to-End Transaction History
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {transactions.length > 0 ? (
               transactions.map((transaction, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-2 h-2 rounded-full ${
-                      transaction.status === 'confirmed' ? 'bg-green-500' : 
-                      transaction.status === 'pending' ? 'bg-yellow-500' : 'bg-red-500'
-                    }`}></div>
+                <div key={index} className="border rounded-lg p-4 bg-gray-50">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-3 h-3 rounded-full ${
+                        transaction.status === 'completed' ? 'bg-green-500' : 
+                        transaction.status === 'pending' ? 'bg-yellow-500' : 'bg-red-500'
+                      }`}></div>
+                      <Badge variant="outline" className="text-xs">
+                        {transaction.transactionType}
+                      </Badge>
+                      <Badge variant="outline" className="text-xs">
+                        {transaction.credit?.renewableSource}
+                      </Badge>
+                    </div>
+                    <Badge 
+                      variant={transaction.status === 'completed' ? 'default' : 
+                              transaction.status === 'pending' ? 'secondary' : 'destructive'}
+                    >
+                      {transaction.status}
+                    </Badge>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <p className="font-medium">{transaction.description}</p>
-                      <p className="text-sm text-gray-500">
-                        {new Date().toLocaleTimeString()}
-                      </p>
+                      <p className="font-medium text-gray-700">Transaction Details</p>
+                      <p className="text-gray-600">Amount: {transaction.amount} kg</p>
+                      <p className="text-gray-600">Price: ${transaction.pricePerUnit}/kg</p>
+                      <p className="text-gray-600">Total: ${transaction.totalPrice}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-700">Participants</p>
+                      <p className="text-gray-600">From: {transaction.fromUserId}</p>
+                      <p className="text-gray-600">To: {transaction.toUserId}</p>
+                      <p className="text-gray-600">Credit: {transaction.creditId.substring(0, 8)}...</p>
                     </div>
                   </div>
-                  <Badge 
-                    variant={transaction.status === 'confirmed' ? 'default' : 
-                            transaction.status === 'pending' ? 'secondary' : 'destructive'}
-                  >
-                    {transaction.status}
-                  </Badge>
+                  
+                  {transaction.transactionHash && (
+                    <div className="mt-3 pt-3 border-t">
+                      <p className="text-xs text-gray-500">
+                        Blockchain Hash: {transaction.transactionHash.substring(0, 20)}...
+                      </p>
+                    </div>
+                  )}
+                  
+                  <div className="mt-3 text-xs text-gray-500">
+                    {new Date(transaction.createdAt).toLocaleString()}
+                  </div>
                 </div>
               ))
             ) : (
               <div className="text-center py-8 text-gray-500">
                 <Activity className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-                <p>No recent activity</p>
+                <p>No transactions found</p>
               </div>
             )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  const renderRoleActivity = () => (
+    <div className="space-y-6">
+      <Card className="bg-white">
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <BarChart3 className="h-5 w-5 mr-2" />
+            Role-Based Activity Summary
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Producer Activity */}
+            <div className="space-y-3">
+              <h4 className="font-semibold text-green-700 flex items-center">
+                <TrendingUp className="h-4 w-4 mr-2" />
+                Producer Actions
+              </h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span>Credits Created:</span>
+                  <Badge variant="outline">{credits.filter(c => c.producerId === 'producer1').length}</Badge>
+                </div>
+                <div className="flex justify-between">
+                  <span>Facilities:</span>
+                  <Badge variant="outline">{facilities.filter(f => f.producerId === 'producer1').length}</Badge>
+                </div>
+                <div className="flex justify-between">
+                  <span>Pending Validation:</span>
+                  <Badge variant="secondary">{credits.filter(c => c.producerId === 'producer1' && c.status === 'pending').length}</Badge>
+                </div>
+              </div>
+            </div>
+
+            {/* Validator Activity */}
+            <div className="space-y-3">
+              <h4 className="font-semibold text-blue-700 flex items-center">
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Validator Actions
+              </h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span>Credits Validated:</span>
+                  <Badge variant="outline">{credits.filter(c => c.isValidated && c.validatedBy).length}</Badge>
+                </div>
+                <div className="flex justify-between">
+                  <span>Blockchain Credits:</span>
+                  <Badge variant="outline">{credits.filter(c => c.blockchainId).length}</Badge>
+                </div>
+                <div className="flex justify-between">
+                  <span>Issued Status:</span>
+                  <Badge variant="outline">{credits.filter(c => c.status === 'issued').length}</Badge>
+                </div>
+              </div>
+            </div>
+
+            {/* Buyer Activity */}
+            <div className="space-y-3">
+              <h4 className="font-semibold text-purple-700 flex items-center">
+                <FileText className="h-4 w-4 mr-2" />
+                Buyer Actions
+              </h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span>Credits Purchased:</span>
+                  <Badge variant="outline">{credits.filter(c => c.ownerId === 'buyer1').length}</Badge>
+                </div>
+                <div className="flex justify-between">
+                  <span>Total Transactions:</span>
+                  <Badge variant="outline">{transactions.filter(t => t.transactionType === 'purchase').length}</Badge>
+                </div>
+                <div className="flex justify-between">
+                  <span>Retired Credits:</span>
+                  <Badge variant="outline">{credits.filter(c => c.status === 'retired').length}</Badge>
+                </div>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -347,12 +458,21 @@ export default function AuditorDashboard({
           <Activity className="h-4 w-4 mr-2" />
           Audit Trail
         </Button>
+        <Button
+          variant={selectedReport === 'roles' ? 'default' : 'ghost'}
+          onClick={() => setSelectedReport('roles')}
+          className="flex items-center"
+        >
+          <BarChart3 className="h-4 w-4 mr-2" />
+          Role Activity
+        </Button>
       </div>
 
       {/* Content based on selected tab */}
       {selectedReport === 'overview' && renderOverview()}
       {selectedReport === 'compliance' && renderComplianceReport()}
       {selectedReport === 'audit' && renderAuditTrail()}
+      {selectedReport === 'roles' && renderRoleActivity()}
     </div>
   );
 }

@@ -114,22 +114,64 @@ export default function BuyerDashboard({
     try {
       setLoading(creditId.toString());
       
+      // Update transaction status
+      onTransaction({
+        type: 'purchase',
+        status: 'pending',
+        description: `Purchasing ${amount} kg H2 credits for $${(amount * price).toFixed(2)}...`
+      });
+      
       // Credits are already pre-minted on blockchain, just purchase them
       console.log('💰 Purchasing pre-minted credits from marketplace...');
       const purchaseTx = await purchaseCredits(credit.blockchainId!, amount);
 
       console.log('✅ Credits purchased successfully:', purchaseTx);
       
-      toast({
-        title: "Credits Purchased Successfully!",
-        description: `You have purchased ${amount} kg H2 credits for $${(amount * price).toFixed(2)}. Credits were pre-minted on blockchain.`,
-      });
+              // Record the transaction in the database
+        try {
+          await ApiService.recordPurchase(
+            creditId, 
+            buyerId, 
+            amount, 
+            price, 
+            purchaseTx
+          );
+          
+          // Update credit ownership
+          await ApiService.updateCreditOwnership(creditId, buyerId, purchaseTx);
+          
+          console.log('✅ Purchase transaction recorded in database');
+          
+          onTransaction({
+            type: 'purchase',
+            status: 'confirmed',
+            description: `Purchase completed! Transaction hash: ${purchaseTx.substring(0, 10)}...`
+          });
+        
+        toast({
+          title: "Credits Purchased Successfully!",
+          description: `You have purchased ${amount} kg H2 credits for $${(amount * price).toFixed(2)}. Transaction recorded on blockchain and database.`,
+        });
+        
+      } catch (dbError) {
+        console.warn('⚠️ Database update failed, but blockchain transaction succeeded:', dbError);
+        toast({
+          title: "Purchase Partially Complete",
+          description: "Credits purchased on blockchain, but database update failed. Please contact support.",
+          variant: "destructive"
+        });
+      }
       
-      // Refresh the credits list
+      // Refresh the credits list to show updated ownership
       onRefresh();
       
     } catch (error) {
       console.error('❌ Purchase failed:', error);
+      onTransaction({
+        type: 'purchase',
+        status: 'failed',
+        description: `Purchase failed: ${error instanceof Error ? error.message : "Unknown error"}`
+      });
       toast({
         title: "Purchase Failed",
         description: error instanceof Error ? error.message : "Failed to purchase credits",

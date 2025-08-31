@@ -47,6 +47,7 @@ contract GreenHydrogenCredits is ERC1155, Ownable {
     mapping(string => Facility) public facilities;
     mapping(address => uint256[]) public producerCredits;
     mapping(address => uint256[]) public ownerCredits;
+    mapping(address => bool) public validators;
     
     // Events
     event CreditGenerated(
@@ -338,8 +339,21 @@ contract GreenHydrogenCredits is ERC1155, Ownable {
     // Internal functions
     
     function _isValidator(address account) internal view returns (bool) {
-        // For now, only owner is validator. Can be extended with validator registry
-        return account == owner();
+        return account == owner() || validators[account];
+    }
+    
+    /**
+     * @dev Add a validator (only owner can call this)
+     */
+    function addValidator(address validator) external onlyOwner {
+        validators[validator] = true;
+    }
+    
+    /**
+     * @dev Remove a validator (only owner can call this)
+     */
+    function removeValidator(address validator) external onlyOwner {
+        validators[validator] = false;
     }
     
     function _addToOwnerCredits(address owner, uint256 creditId) internal {
